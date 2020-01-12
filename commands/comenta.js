@@ -1,21 +1,15 @@
 const mongodb = require('../integrations/mongodb');
 
 (() => {
-  function comenta(message, callback) {
-    mongodb.getRandomSilvioComment((error, comment) => {
-      if (error) {
-        callback('Vixxxxxxxi...');
-        return;
-      }
-
-      callback(comment);
-    });
+  function comenta() {
+    return mongodb.getRandomSilvioComment()
+      .catch(() => 'Vixxxxxxxi...');
   }
 
   module.exports = {
     pattern: /^.*(?:comenta)|(?:comentar)|(?:vai dizer)|(?:diria).*$/,
     handler: comenta,
     description: '*silviao comenta*: I have reached sentience, try it out',
-    channels: undefined
+    channels: undefined,
   };
 })();

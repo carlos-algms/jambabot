@@ -1,32 +1,29 @@
 const mongodb = require('../integrations/mongodb');
 
 (() => {
-  function downvote(message, callback, dish) {
-    mongodb.isValidDish(dish, (errorValidatingDish, isValidDish) => {
-      if (errorValidatingDish) {
-        callback('Não entendi nada....');
-        return;
-      }
+  function downvote(message, dish) {
+    return mongodb.isValidDish(dish)
+      .catch(() => {
+        throw new Error('Não entendi nada....');
+      })
+      .then((isValidDish) => {
+        if (!isValidDish) {
+          throw new Error('C fude. Kkkkkkkk');
+        }
 
-      if (isValidDish) {
-        mongodb.downvoteDish(message.userName, dish, (errorDownvoting) => {
-          if (errorDownvoting) {
-            callback('Não entendi nada....');
-            return;
-          }
-
-          callback('Vixxxxxxi c lascou kkkkk');
-        });
-      } else {
-        callback('C fude. Kkkkkkkk');
-      }
-    });
+        return mongodb.downvoteDish(message.userName, dish)
+          .catch(() => {
+            throw new Error('Não entendi nada....');
+          });
+      })
+      .then(() => 'Vixxxxxxi c lascou kkkkk')
+      .catch((error) => error.message);
   }
 
   module.exports = {
     pattern: /^downvote (.+)$/,
     handler: downvote,
     description: '*silviao downvote [dish name]* : Adds an downvote for the specified dish',
-    channels: ['delicias-do-jamba', 'dev-delicias-do-jamba']
+    channels: { silviao: ['#delicias-do-jamba', '#dev-delicias-do-jamba', '@direct_message'] },
   };
 })();

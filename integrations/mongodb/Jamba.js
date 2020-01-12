@@ -5,58 +5,53 @@ const mongoose = require('mongoose');
     formattedDate: { type: String, unique: true },
     mainDishes: [String],
     garnishes: [String],
-    salads: [String]
+    salads: [String],
   });
   const Jamba = mongoose.model('Jamba', JambaSchema);
 
-  function findJambaForDate(date, callback) {
+  function findJambaForDate(date) {
     const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 
-    Jamba.findOne({ formattedDate }, (error, jamba) => {
-      if (error) {
-        callback(error, undefined);
-        return;
-      }
+    return Jamba.findOne({ formattedDate })
+      .then((jamba) => {
+        if (!jamba) {
+          return undefined;
+        }
 
-      if (!jamba) {
-        callback(null, undefined);
-      } else {
-        callback(null, {
+        return {
           mainDishes: jamba.mainDishes,
           garnishes: jamba.garnishes,
-          salads: jamba.salads
-        });
-      }
-    });
+          salads: jamba.salads,
+        };
+      });
   }
 
-  function saveJambas(jambas, callback) {
-    recursivelySaveJambas(jambas, 0, [], callback);
-  }
-
-  function recursivelySaveJambas(jambas, index, errors, callback) {
-    if (index < jambas.length) {
-      const jamba = jambas[index];
+  function saveJambas(jambas) {
+    return Promise.all(jambas.map((jamba) => {
       const formattedDate = `${jamba.date.getFullYear()}-${jamba.date.getMonth() + 1}-${jamba.date.getDate()}`;
       const jambaComponents = {
         $set: {
           mainDishes: jamba.mainDishes,
           garnishes: jamba.garnishes,
-          salads: jamba.salads
-        }
+          salads: jamba.salads,
+        },
       };
 
-      Jamba.update({ formattedDate }, jambaComponents, { upsert: true }, (error) => {
-        errors.push(error);
-        recursivelySaveJambas(jambas, index + 1, errors, callback);
+      return new Promise((resolve, reject) => {
+        Jamba.updateMany({ formattedDate }, jambaComponents, { upsert: true }, (error) => {
+          if (error) {
+            reject(error);
+            return;
+          }
+
+          resolve(true);
+        });
       });
-    } else {
-      callback(errors);
-    }
+    }));
   }
 
   module.exports = {
     findJambaForDate,
-    saveJambas
+    saveJambas,
   };
 })();

@@ -13,11 +13,7 @@ It has the following behavior:
 - If it is executed between 11AM and 24PM, it will post the spoiler for tomorrow's menu.
 
 This script was written for run in NodeJS using JavaScript.
-To run it, you must define a file named "variables.js" with three variables defined:
-
-- JAMBABOT_DEBUG: Enables debug logs, and makes the script post to the debug channel (it should be either 'True' or 'False');
-- JAMBABOT_DEBUG_URL: The URL provided by Slack - this one is used for debug purposes (only used if JAMBABOT_DEBUG is true);
-- JAMBABOT_PROD_URL: The URL provided by Slack - this is one is used for production.
+To run it, you must define a file named "variables.js", following the stub file that you can use to guide you, "variables.js.stub".
 
 After defining the necessary variables, the script is run using:
 
@@ -30,11 +26,7 @@ It was designed to run only in the hour before that, calculating the minutes to 
 When the counter reaches 0, a GIF is also posted.
 
 This script was written for run in NodeJS using JavaScript.
-To run it, you should have 3 environment variables defined:
-
-- JAMBABOT_DEBUG: Enables debug logs, and makes the script post to the debug channel (it should be either 'True' or 'False');
-- JAMBABOT_DEBUG_URL: The URL provided by Slack - this one is used for debug purposes (only used if JAMBABOT_DEBUG is true);
-- JAMBABOT_PROD_URL: The URL provided by Slack - this is one is used for production.
+To run it, you must define a file named "variables.js", following the stub file that you can use to guide you, "variables.js.stub".
 
 After defining the necessary variables, the script is run using:
 
@@ -43,23 +35,10 @@ After defining the necessary variables, the script is run using:
 ## jambabot.js
 
 This script implements a reactive bot, answering to simple requests from users.
-There are currently to commands:
-
-- jambabot cardapio [date/month]: Replies with today's menu (with some mockery depending on the time it's executed); if a date and month where supplied, it will search for that day's menu;
-- jambabot spoiler: Replies with tomorrow's menu.
-
-In development, any other command will result in a "Hello, world"-like reply, followed by an echo of the given command.
+There are currently many commands, you can check them out with the command `@silviao ajuda`.
 
 This script was written for run in NodeJS using JavaScript.
-To run it, you must define a file named "variables.js" with three variables defined:
-
-- JAMBABOT_DEBUG_TOKEN: The token provided by Slack to validate that the post was originated from Slack - this one is used for debug purposes, printing additional logs;
-- JAMBABOT_PROD_TOKEN: The token provided by Slack to validate that the post was originated from Slack - this one is used for production;
-- GOOGLE_API_KEY: You custom Google's API key (used for image obtention, requires "Google Custom Search Engine API" to be enabled);
-- GOOGLE_CSE_ID: You custom Google's search engine ID (used for image obtention, requires "Image search" to be enabled);
-- PRE_DEFINED_IMAGES: Map of food name vs. image URLs to be used when looking for an image for a given food.
-
-There's a stub file that you can use to guide you, "variables.js.stub".
+To run it, you must define a file named "variables.js", following the stub file that you can use to guide you, "variables.js.stub".
 
 After implementing this file, you can test your script by running:
 
